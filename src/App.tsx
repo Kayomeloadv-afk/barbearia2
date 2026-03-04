@@ -15,6 +15,7 @@ import Fidelidade from '@/pages/Fidelidade';
 import Relatorios from '@/pages/Relatorios';
 import Configuracoes from '@/pages/Configuracoes';
 import Usuarios from '@/pages/Usuarios';
+import AgendamentoOnline from '@/pages/AgendamentoOnline';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -76,6 +77,8 @@ export default function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            {/* Página pública de agendamento online para clientes */}
+            <Route path="/agendar" element={<AgendamentoOnline />} />
             <Route path="/login" element={<LoginRoute />} />
             <Route element={<ProtectedRoutes />}>
               <Route path="/" element={<Dashboard />} />

@@ -70,20 +70,20 @@ export default function Usuarios() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Gerenciar Usuários</h1>
           <p className="text-sm text-slate-500 mt-1">Adicione e gerencie os PINs de acesso da sua equipe</p>
         </div>
-        <Button icon={<Plus className="w-4 h-4" />} onClick={() => { resetForm(); setShowModal(true); }}>
+        <Button icon={<Plus className="w-5 h-5" />} onClick={() => { resetForm(); setShowModal(true); }}>
           Novo Usuário
         </Button>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <Card>
-          <CardContent className="flex items-center gap-4">
+          <CardContent className="flex items-center gap-6">
             <div className="w-11 h-11 bg-slate-900 rounded-xl flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
@@ -94,7 +94,7 @@ export default function Usuarios() {
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="flex items-center gap-4">
+          <CardContent className="flex items-center gap-6">
             <div className="w-11 h-11 bg-emerald-500 rounded-xl flex items-center justify-center">
               <UserCheck className="w-5 h-5 text-white" />
             </div>
@@ -105,7 +105,7 @@ export default function Usuarios() {
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="flex items-center gap-4">
+          <CardContent className="flex items-center gap-6">
             <div className="w-11 h-11 bg-red-500 rounded-xl flex items-center justify-center">
               <UserX className="w-5 h-5 text-white" />
             </div>
@@ -119,7 +119,7 @@ export default function Usuarios() {
 
       {/* Users List */}
       <Card>
-        <div className="px-6 py-4 border-b border-slate-100">
+        <div className="px-7 py-5 border-b border-slate-100">
           <h2 className="text-base font-semibold text-slate-900">Usuários Cadastrados</h2>
         </div>
         <CardContent className="p-0">
@@ -128,13 +128,13 @@ export default function Usuarios() {
               icon={<Shield className="w-7 h-7" />}
               title="Nenhum usuário cadastrado"
               description="Adicione o primeiro usuário para que sua equipe possa acessar o sistema"
-              action={<Button size="sm" icon={<Plus className="w-4 h-4" />} onClick={() => { resetForm(); setShowModal(true); }}>Adicionar Usuário</Button>}
+              action={<Button size="sm" icon={<Plus className="w-5 h-5" />} onClick={() => { resetForm(); setShowModal(true); }}>Adicionar Usuário</Button>}
             />
           ) : (
             <div className="divide-y divide-slate-50">
               {users.map((user: any) => (
-                <div key={user.id} className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
-                  <div className="flex items-center gap-4">
+                <div key={user.id} className="px-7 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
+                  <div className="flex items-center gap-6">
                     <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-sm font-bold text-white ${user.isActive ? 'bg-gradient-to-br from-[#c8a45a] to-[#a88a3e]' : 'bg-slate-300'}`}>
                       {getInitials(user.name)}
                     </div>
@@ -156,18 +156,18 @@ export default function Usuarios() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <Badge variant={user.isActive ? 'success' : 'error'} dot>
                       {user.isActive ? 'Ativo' : 'Inativo'}
                     </Badge>
                     <Button variant="ghost" size="xs" onClick={() => toggleActive(user)}>
-                      {user.isActive ? <UserX className="w-4 h-4 text-red-500" /> : <UserCheck className="w-4 h-4 text-emerald-500" />}
+                      {user.isActive ? <UserX className="w-5 h-5 text-red-500" /> : <UserCheck className="w-5 h-5 text-emerald-500" />}
                     </Button>
                     <Button variant="ghost" size="xs" onClick={() => openEdit(user)}>
-                      <Edit2 className="w-4 h-4 text-slate-500" />
+                      <Edit2 className="w-5 h-5 text-slate-500" />
                     </Button>
                     <Button variant="ghost" size="xs" onClick={() => { if (confirm('Excluir este usuário?')) deleteMutation.mutate(user.id); }}>
-                      <Trash2 className="w-4 h-4 text-red-500" />
+                      <Trash2 className="w-5 h-5 text-red-500" />
                     </Button>
                   </div>
                 </div>
@@ -179,7 +179,7 @@ export default function Usuarios() {
 
       {/* Modal */}
       <Modal open={showModal} onClose={() => { setShowModal(false); resetForm(); }} title={editingId ? 'Editar Usuário' : 'Novo Usuário'} subtitle="Defina o nome, função e PIN de acesso">
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <Input
             label="Nome Completo"
             placeholder="Ex: João Silva"

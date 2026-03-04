@@ -47,26 +47,26 @@ export default function Servicos() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Serviços</h1>
           <p className="text-sm text-slate-500 mt-1">{services.length} serviço(s) cadastrado(s)</p>
         </div>
-        <Button icon={<Plus className="w-4 h-4" />} onClick={() => { setForm({ name: '', price: '', duration: '30' }); setShowModal(true); }}>
+        <Button icon={<Plus className="w-5 h-5" />} onClick={() => { setForm({ name: '', price: '', duration: '30' }); setShowModal(true); }}>
           Novo Serviço
         </Button>
       </div>
 
       {services.length === 0 ? (
         <EmptyState icon={<Scissors className="w-7 h-7" />} title="Nenhum serviço" description="Cadastre os serviços oferecidos pela barbearia"
-          action={<Button size="sm" icon={<Plus className="w-4 h-4" />} onClick={() => setShowModal(true)}>Adicionar Serviço</Button>} />
+          action={<Button size="sm" icon={<Plus className="w-5 h-5" />} onClick={() => setShowModal(true)}>Adicionar Serviço</Button>} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service: any) => (
             <Card key={service.id} hover>
               <CardContent>
                 <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-6">
                     <div className="w-12 h-12 bg-[#c8a45a]/10 rounded-2xl flex items-center justify-center">
                       <Scissors className="w-5 h-5 text-[#c8a45a]" />
                     </div>
@@ -79,16 +79,16 @@ export default function Servicos() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100">
-                  <div className="flex items-center gap-4">
-                    <span className="text-xl font-bold text-slate-900">{formatCurrency(service.price)}</span>
+                  <div className="flex items-center gap-6">
+                    <span className="text-2xl font-bold text-slate-900">{formatCurrency(service.price)}</span>
                     <span className="flex items-center gap-1 text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-lg"><Clock className="w-3 h-3" />{service.duration}min</span>
                   </div>
                   <div className="flex gap-1">
                     <button onClick={() => openEdit(service)} className="p-2 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
-                      <Edit2 className="w-4 h-4" />
+                      <Edit2 className="w-5 h-5" />
                     </button>
                     <button onClick={() => { if (confirm('Excluir serviço?')) deleteMutation.mutate(service.id); }} className="p-2 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors">
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
@@ -99,9 +99,9 @@ export default function Servicos() {
       )}
 
       <Modal open={showModal} onClose={closeModal} title={editing ? 'Editar Serviço' : 'Novo Serviço'} subtitle="Defina o nome, preço e duração">
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <Input label="Nome do Serviço" placeholder="Ex: Corte Degradê" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <Input label="Preço (R$)" type="number" step="0.01" placeholder="0.00" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
             <Input label="Duração (min)" type="number" placeholder="30" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} required />
           </div>

@@ -59,26 +59,26 @@ export default function Equipe() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Equipe</h1>
           <p className="text-sm text-slate-500 mt-1">{barbers.length} barbeiro(s) cadastrado(s)</p>
         </div>
-        <Button icon={<Plus className="w-4 h-4" />} onClick={() => { resetForm(); setShowModal(true); }}>
+        <Button icon={<Plus className="w-5 h-5" />} onClick={() => { resetForm(); setShowModal(true); }}>
           Novo Barbeiro
         </Button>
       </div>
 
       {barbers.length === 0 ? (
         <EmptyState icon={<Users className="w-7 h-7" />} title="Nenhum barbeiro" description="Cadastre sua equipe para começar"
-          action={<Button size="sm" icon={<Plus className="w-4 h-4" />} onClick={() => setShowModal(true)}>Adicionar Barbeiro</Button>} />
+          action={<Button size="sm" icon={<Plus className="w-5 h-5" />} onClick={() => setShowModal(true)}>Adicionar Barbeiro</Button>} />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {barbers.map((barber: any) => (
             <Card key={barber.id} hover>
               <CardContent>
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-6">
                     <div className="w-14 h-14 bg-gradient-to-br from-[#c8a45a] to-[#a88a3e] rounded-2xl flex items-center justify-center text-white text-lg font-bold shadow-md shadow-[#c8a45a]/20">
                       {getInitials(barber.name)}
                     </div>
@@ -91,10 +91,10 @@ export default function Equipe() {
                   </div>
                   <div className="flex gap-1">
                     <button onClick={() => openEdit(barber)} className="p-2 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
-                      <Edit2 className="w-4 h-4" />
+                      <Edit2 className="w-5 h-5" />
                     </button>
                     <button onClick={() => { if (confirm('Excluir barbeiro?')) deleteMutation.mutate(barber.id); }} className="p-2 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors">
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
@@ -102,10 +102,10 @@ export default function Equipe() {
                 {barber.bio && <p className="text-sm text-slate-500 mb-3 line-clamp-2">{barber.bio}</p>}
 
                 <div className="space-y-2 text-sm text-slate-600">
-                  {barber.phone && <div className="flex items-center gap-2.5"><Phone className="w-4 h-4 text-slate-400" />{barber.phone}</div>}
-                  {barber.email && <div className="flex items-center gap-2.5"><Mail className="w-4 h-4 text-slate-400" />{barber.email}</div>}
-                  {barber.instagram && <div className="flex items-center gap-2.5"><Instagram className="w-4 h-4 text-slate-400" />@{barber.instagram}</div>}
-                  <div className="flex items-center gap-2.5"><Star className="w-4 h-4 text-[#c8a45a]" />Comissão: {barber.commissionRate}%</div>
+                  {barber.phone && <div className="flex items-center gap-2.5"><Phone className="w-5 h-5 text-slate-400" />{barber.phone}</div>}
+                  {barber.email && <div className="flex items-center gap-2.5"><Mail className="w-5 h-5 text-slate-400" />{barber.email}</div>}
+                  {barber.instagram && <div className="flex items-center gap-2.5"><Instagram className="w-5 h-5 text-slate-400" />@{barber.instagram}</div>}
+                  <div className="flex items-center gap-2.5"><Star className="w-5 h-5 text-[#c8a45a]" />Comissão: {barber.commissionRate}%</div>
                 </div>
 
                 {barber.specialties?.length > 0 && (
@@ -122,13 +122,13 @@ export default function Equipe() {
       )}
 
       <Modal open={showModal} onClose={closeModal} title={editing ? 'Editar Barbeiro' : 'Novo Barbeiro'} subtitle="Preencha os dados do profissional" size="md">
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <Input label="Nome" placeholder="Nome completo" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <Input label="Telefone" placeholder="(00) 00000-0000" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required />
             <Input label="Email" type="email" placeholder="email@exemplo.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <Input label="Comissão (%)" type="number" value={form.commissionRate} onChange={(e) => setForm({ ...form, commissionRate: e.target.value })} />
             <Input label="Anos de Experiência" type="number" value={form.yearsExperience} onChange={(e) => setForm({ ...form, yearsExperience: e.target.value })} />
           </div>
@@ -136,7 +136,7 @@ export default function Equipe() {
           <Textarea label="Bio" placeholder="Breve descrição do profissional..." value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">Especialidades</label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {SPECIALTIES.map((s) => (
                 <button key={s} type="button"
                   className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 ${form.specialties.includes(s) ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}

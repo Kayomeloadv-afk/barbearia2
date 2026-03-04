@@ -53,7 +53,7 @@ export default function Configuracoes() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader><h2 className="text-lg font-semibold text-slate-900">Informações da Barbearia</h2></CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <Input label="Nome da Barbearia" value={form.shopName} onChange={(e) => setForm({ ...form, shopName: e.target.value })} />
             <Input label="Endereço" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
             <Input label="Telefone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
@@ -62,14 +62,14 @@ export default function Configuracoes() {
 
         <Card>
           <CardHeader><h2 className="text-lg font-semibold text-slate-900">Horário de Funcionamento</h2></CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-2 gap-6">
               <Input label="Abertura" type="time" value={form.openTime} onChange={(e) => setForm({ ...form, openTime: e.target.value })} />
               <Input label="Fechamento" type="time" value={form.closeTime} onChange={(e) => setForm({ ...form, closeTime: e.target.value })} />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">Dias de Funcionamento</label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-3">
                 {DAYS.map((day, i) => (
                   <button key={day} type="button"
                     className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${form.workDays[i] ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-500'}`}
@@ -88,18 +88,18 @@ export default function Configuracoes() {
 
         <Card>
           <CardHeader><h2 className="text-lg font-semibold text-slate-900">Personalização de Cores</h2></CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-2 gap-6">
               <div className="space-y-1">
                 <label className="block text-sm font-medium text-slate-700">Cor Principal</label>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-6">
                   <input type="color" value={form.primaryColor} onChange={(e) => setForm({ ...form, primaryColor: e.target.value })} className="w-10 h-10 rounded cursor-pointer border-0" />
                   <Input value={form.primaryColor} onChange={(e) => setForm({ ...form, primaryColor: e.target.value })} className="flex-1" />
                 </div>
               </div>
               <div className="space-y-1">
                 <label className="block text-sm font-medium text-slate-700">Cor de Destaque</label>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-6">
                   <input type="color" value={form.accentColor} onChange={(e) => setForm({ ...form, accentColor: e.target.value })} className="w-10 h-10 rounded cursor-pointer border-0" />
                   <Input value={form.accentColor} onChange={(e) => setForm({ ...form, accentColor: e.target.value })} className="flex-1" />
                 </div>
@@ -119,7 +119,7 @@ export default function Configuracoes() {
 
         <div className="flex justify-end">
           <Button type="submit" loading={updateMutation.isPending} size="lg">
-            <Save className="w-4 h-4" /> Salvar Configurações
+            <Save className="w-5 h-5" /> Salvar Configurações
           </Button>
         </div>
       </form>

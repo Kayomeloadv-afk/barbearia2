@@ -46,20 +46,20 @@ export default function Fidelidade() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Programa de Fidelidade</h1>
           <p className="text-sm text-slate-500 mt-1">Gerencie recompensas para seus clientes</p>
         </div>
         <Button onClick={() => { setForm({ name: '', description: '', pointsRequired: '', type: 'discount' }); setShowModal(true); }}>
-          <Plus className="w-4 h-4" /> Nova Recompensa
+          <Plus className="w-5 h-5" /> Nova Recompensa
         </Button>
       </div>
 
       {rewards.length === 0 ? (
         <EmptyState icon={<Award className="w-8 h-8" />} title="Nenhuma recompensa" description="Crie recompensas para fidelizar clientes" action={<Button onClick={() => setShowModal(true)}>Criar Recompensa</Button>} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {rewards.map((reward: any) => (
             <Card key={reward.id}>
               <CardContent>
@@ -68,8 +68,8 @@ export default function Fidelidade() {
                     <Gift className="w-6 h-6 text-[#c8a45a]" />
                   </div>
                   <div className="flex gap-1">
-                    <button onClick={() => openEdit(reward)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400"><Edit2 className="w-4 h-4" /></button>
-                    <button onClick={() => { if (confirm('Excluir?')) deleteMutation.mutate(reward.id); }} className="p-1.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                    <button onClick={() => openEdit(reward)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400"><Edit2 className="w-5 h-5" /></button>
+                    <button onClick={() => { if (confirm('Excluir?')) deleteMutation.mutate(reward.id); }} className="p-1.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500"><Trash2 className="w-5 h-5" /></button>
                   </div>
                 </div>
                 <h3 className="font-semibold text-slate-900 mb-1">{reward.name}</h3>
@@ -85,7 +85,7 @@ export default function Fidelidade() {
       )}
 
       <Modal open={showModal} onClose={closeModal} title={editing ? 'Editar Recompensa' : 'Nova Recompensa'}>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <Input label="Nome" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
           <Textarea label="Descrição" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           <Input label="Pontos Necessários" type="number" value={form.pointsRequired} onChange={(e) => setForm({ ...form, pointsRequired: e.target.value })} required />

@@ -11,10 +11,10 @@ interface BadgeProps {
 export function Badge({ children, variant = 'default', size = 'sm', className, dot }: BadgeProps) {
   const variants = {
     default: 'bg-slate-100 text-slate-600',
-    success: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
-    warning: 'bg-amber-50 text-amber-700 border border-amber-100',
-    error: 'bg-red-50 text-red-700 border border-red-100',
-    info: 'bg-blue-50 text-blue-700 border border-blue-100',
+    success: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+    warning: 'bg-amber-50 text-amber-700 border border-amber-200',
+    error: 'bg-red-50 text-red-700 border border-red-200',
+    info: 'bg-blue-50 text-blue-700 border border-blue-200',
     accent: 'bg-[#c8a45a]/10 text-[#a88a3e] border border-[#c8a45a]/20',
   };
 
@@ -28,18 +28,18 @@ export function Badge({ children, variant = 'default', size = 'sm', className, d
   };
 
   const sizes = {
-    sm: 'px-2.5 py-0.5 text-xs',
-    md: 'px-3 py-1 text-sm',
+    sm: 'px-3 py-1 text-xs',
+    md: 'px-3.5 py-1.5 text-sm',
   };
 
   return (
     <span className={cn(
-      'inline-flex items-center gap-1.5 rounded-full font-medium',
+      'inline-flex items-center gap-1.5 rounded-full font-semibold',
       variants[variant],
       sizes[size],
       className
     )}>
-      {dot && <span className={cn('w-1.5 h-1.5 rounded-full', dotColors[variant])} />}
+      {dot && <span className={cn('w-2 h-2 rounded-full', dotColors[variant])} />}
       {children}
     </span>
   );
@@ -54,12 +54,12 @@ interface EmptyStateProps {
 
 export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center animate-fadeIn">
-      <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 mb-5">
+    <div className="flex flex-col items-center justify-center py-20 px-8 text-center animate-fadeIn">
+      <div className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center text-slate-400 mb-6">
         {icon}
       </div>
-      <h3 className="text-base font-semibold text-slate-800 mb-1">{title}</h3>
-      <p className="text-sm text-slate-500 max-w-xs mb-5">{description}</p>
+      <h3 className="text-lg font-bold text-slate-800 mb-2">{title}</h3>
+      <p className="text-sm text-slate-500 max-w-sm leading-relaxed mb-6">{description}</p>
       {action}
     </div>
   );

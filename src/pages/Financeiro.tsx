@@ -57,32 +57,32 @@ export default function Financeiro() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Financeiro</h1>
           <p className="text-sm text-slate-500 mt-1">Controle de receitas e despesas</p>
         </div>
         <Button onClick={() => { resetForm(); setShowModal(true); }}>
-          <Plus className="w-4 h-4" /> Nova Transação
+          <Plus className="w-5 h-5" /> Nova Transação
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card><CardContent className="flex items-center gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <Card><CardContent className="flex items-center gap-6">
           <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center"><TrendingUp className="w-6 h-6 text-white" /></div>
           <div><p className="text-2xl font-bold text-green-700">{formatCurrency(totalIncome)}</p><p className="text-xs text-slate-500">Receitas</p></div>
         </CardContent></Card>
-        <Card><CardContent className="flex items-center gap-4">
+        <Card><CardContent className="flex items-center gap-6">
           <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center"><TrendingDown className="w-6 h-6 text-white" /></div>
           <div><p className="text-2xl font-bold text-red-700">{formatCurrency(totalExpenses)}</p><p className="text-xs text-slate-500">Despesas</p></div>
         </CardContent></Card>
-        <Card><CardContent className="flex items-center gap-4">
+        <Card><CardContent className="flex items-center gap-6">
           <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center"><DollarSign className="w-6 h-6 text-white" /></div>
           <div><p className="text-2xl font-bold text-blue-700">{formatCurrency(totalIncome - totalExpenses)}</p><p className="text-xs text-slate-500">Saldo</p></div>
         </CardContent></Card>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         {(['all', 'income', 'expense'] as const).map((f) => (
           <Button key={f} variant={filter === f ? 'primary' : 'secondary'} size="sm" onClick={() => setFilter(f)}>
             {f === 'all' ? 'Todos' : f === 'income' ? 'Receitas' : 'Despesas'}
@@ -107,7 +107,7 @@ export default function Financeiro() {
                 {filtered.sort((a: any, b: any) => b.date?.localeCompare(a.date)).map((tx: any) => (
                   <tr key={tx.id} className="hover:bg-slate-50">
                     <td className="px-5 py-3">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-6">
                         <div className={`w-2 h-2 rounded-full ${tx.type === 'income' ? 'bg-green-500' : 'bg-red-500'}`} />
                         <div>
                           <p className="text-sm font-medium text-slate-900">{tx.description}</p>
@@ -122,8 +122,8 @@ export default function Financeiro() {
                     </td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => openEdit(tx)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400"><Edit2 className="w-4 h-4" /></button>
-                        <button onClick={() => { if (confirm('Excluir?')) deleteMutation.mutate(tx.id); }} className="p-1.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                        <button onClick={() => openEdit(tx)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400"><Edit2 className="w-5 h-5" /></button>
+                        <button onClick={() => { if (confirm('Excluir?')) deleteMutation.mutate(tx.id); }} className="p-1.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500"><Trash2 className="w-5 h-5" /></button>
                       </div>
                     </td>
                   </tr>
@@ -135,13 +135,13 @@ export default function Financeiro() {
       )}
 
       <Modal open={showModal} onClose={closeModal} title={editing ? 'Editar Transação' : 'Nova Transação'}>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <Input label="Descrição" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <Input label="Valor (R$)" type="number" step="0.01" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} required />
             <Select label="Tipo" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} options={[{ value: 'income', label: 'Receita' }, { value: 'expense', label: 'Despesa' }]} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <Select label="Categoria" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} options={categories[form.type as 'income' | 'expense']} />
             <Input label="Data" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
           </div>

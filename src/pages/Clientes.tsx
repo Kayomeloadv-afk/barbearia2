@@ -50,13 +50,13 @@ export default function Clientes() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Clientes</h1>
           <p className="text-sm text-slate-500 mt-1">{clients.length} cliente(s) cadastrado(s)</p>
         </div>
         <Button onClick={() => { resetForm(); setShowModal(true); }}>
-          <Plus className="w-4 h-4" /> Novo Cliente
+          <Plus className="w-5 h-5" /> Novo Cliente
         </Button>
       </div>
 
@@ -85,7 +85,7 @@ export default function Clientes() {
                 {filtered.map((client: any) => (
                   <tr key={client.id} className="hover:bg-slate-50">
                     <td className="px-5 py-3">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-6">
                         <div className="w-9 h-9 bg-slate-900 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                           {getInitials(client.name)}
                         </div>
@@ -100,8 +100,8 @@ export default function Clientes() {
                     <td className="px-5 py-3 text-sm text-slate-600 hidden lg:table-cell">{client.instagramHandle ? `@${client.instagramHandle}` : '—'}</td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => openEdit(client)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600"><Edit2 className="w-4 h-4" /></button>
-                        <button onClick={() => { if (confirm('Excluir cliente?')) deleteMutation.mutate(client.id); }} className="p-1.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                        <button onClick={() => openEdit(client)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600"><Edit2 className="w-5 h-5" /></button>
+                        <button onClick={() => { if (confirm('Excluir cliente?')) deleteMutation.mutate(client.id); }} className="p-1.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500"><Trash2 className="w-5 h-5" /></button>
                       </div>
                     </td>
                   </tr>
@@ -113,13 +113,13 @@ export default function Clientes() {
       )}
 
       <Modal open={showModal} onClose={closeModal} title={editing ? 'Editar Cliente' : 'Novo Cliente'}>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <Input label="Nome" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <Input label="Telefone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required />
             <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <Input label="Data de Nascimento" type="date" value={form.birthDate} onChange={(e) => setForm({ ...form, birthDate: e.target.value })} />
             <Input label="Instagram" value={form.instagramHandle} onChange={(e) => setForm({ ...form, instagramHandle: e.target.value })} placeholder="usuario" />
           </div>

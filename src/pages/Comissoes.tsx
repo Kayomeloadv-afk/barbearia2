@@ -37,12 +37,12 @@ export default function Comissoes() {
         <p className="text-sm text-slate-500 mt-1">Controle de comissões da equipe</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Card><CardContent className="flex items-center gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <Card><CardContent className="flex items-center gap-6">
           <div className="w-12 h-12 bg-[#c8a45a] rounded-xl flex items-center justify-center"><TrendingUp className="w-6 h-6 text-white" /></div>
           <div><p className="text-2xl font-bold text-slate-900">{formatCurrency(totalPending)}</p><p className="text-xs text-slate-500">Pendente</p></div>
         </CardContent></Card>
-        <Card><CardContent className="flex items-center gap-4">
+        <Card><CardContent className="flex items-center gap-6">
           <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center"><TrendingUp className="w-6 h-6 text-white" /></div>
           <div><p className="text-2xl font-bold text-green-700">{formatCurrency(totalPaid)}</p><p className="text-xs text-slate-500">Pago</p></div>
         </CardContent></Card>
@@ -51,7 +51,7 @@ export default function Comissoes() {
       {barberSummaries.length === 0 ? (
         <EmptyState icon={<Users className="w-8 h-8" />} title="Nenhum barbeiro" description="Cadastre barbeiros para ver comissões" />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {barberSummaries.map((b) => (
             <Card key={b.id}>
               <CardContent>
@@ -64,7 +64,7 @@ export default function Comissoes() {
                     <p className="text-sm text-slate-500">Taxa: {b.commissionRate}%</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-6">
                   <div className="bg-slate-50 rounded-xl p-3 text-center">
                     <p className="text-lg font-bold text-slate-900">{formatCurrency(b.totalEarned)}</p>
                     <p className="text-xs text-slate-500">Total</p>

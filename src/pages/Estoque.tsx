@@ -50,19 +50,19 @@ export default function Estoque() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Estoque</h1>
           <p className="text-sm text-slate-500 mt-1">{products.length} produto(s) • {lowStock.length} com estoque baixo</p>
         </div>
         <Button onClick={() => { resetForm(); setShowModal(true); }}>
-          <Plus className="w-4 h-4" /> Novo Produto
+          <Plus className="w-5 h-5" /> Novo Produto
         </Button>
       </div>
 
       {lowStock.length > 0 && (
         <Card className="border-yellow-200 bg-yellow-50">
-          <CardContent className="flex items-center gap-3">
+          <CardContent className="flex items-center gap-6">
             <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
             <div>
               <p className="text-sm font-medium text-yellow-800">Estoque baixo</p>
@@ -89,8 +89,8 @@ export default function Estoque() {
                 {products.map((p: any) => (
                   <tr key={p.id} className="hover:bg-slate-50">
                     <td className="px-5 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-[#c8a45a]/10 rounded-xl flex items-center justify-center"><Package className="w-4 h-4 text-[#c8a45a]" /></div>
+                      <div className="flex items-center gap-6">
+                        <div className="w-9 h-9 bg-[#c8a45a]/10 rounded-xl flex items-center justify-center"><Package className="w-5 h-5 text-[#c8a45a]" /></div>
                         <div>
                           <p className="text-sm font-medium text-slate-900">{p.name}</p>
                           {p.supplier && <p className="text-xs text-slate-500">{p.supplier}</p>}
@@ -104,8 +104,8 @@ export default function Estoque() {
                     </td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => openEdit(p)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400"><Edit2 className="w-4 h-4" /></button>
-                        <button onClick={() => { if (confirm('Excluir?')) deleteMutation.mutate(p.id); }} className="p-1.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                        <button onClick={() => openEdit(p)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400"><Edit2 className="w-5 h-5" /></button>
+                        <button onClick={() => { if (confirm('Excluir?')) deleteMutation.mutate(p.id); }} className="p-1.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500"><Trash2 className="w-5 h-5" /></button>
                       </div>
                     </td>
                   </tr>
@@ -117,15 +117,15 @@ export default function Estoque() {
       )}
 
       <Modal open={showModal} onClose={closeModal} title={editing ? 'Editar Produto' : 'Novo Produto'}>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <Input label="Nome" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
           <Select label="Categoria" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}
             options={[{ value: '', label: 'Selecione...' }, { value: 'cabelo', label: 'Cabelo' }, { value: 'barba', label: 'Barba' }, { value: 'finalizacao', label: 'Finalização' }, { value: 'higiene', label: 'Higiene' }, { value: 'outro', label: 'Outro' }]} />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <Input label="Preço Venda (R$)" type="number" step="0.01" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
             <Input label="Preço Custo (R$)" type="number" step="0.01" value={form.costPrice} onChange={(e) => setForm({ ...form, costPrice: e.target.value })} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <Input label="Quantidade" type="number" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} />
             <Input label="Qtd Mínima" type="number" value={form.minQuantity} onChange={(e) => setForm({ ...form, minQuantity: e.target.value })} />
           </div>

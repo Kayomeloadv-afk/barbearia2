@@ -63,12 +63,12 @@ export default function Agenda() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Agenda</h1>
           <p className="text-sm text-slate-500 mt-1 capitalize">{dateLabel}</p>
         </div>
-        <Button icon={<Plus className="w-4 h-4" />} onClick={() => { resetForm(); setShowModal(true); }}>
+        <Button icon={<Plus className="w-5 h-5" />} onClick={() => { resetForm(); setShowModal(true); }}>
           Novo Agendamento
         </Button>
       </div>
@@ -76,13 +76,13 @@ export default function Agenda() {
       {/* Date Navigation */}
       <div className="flex items-center gap-2 flex-wrap">
         <Button variant="outline" size="sm" onClick={() => setSelectedDate(format(subDays(parseISO(selectedDate), 1), 'yyyy-MM-dd'))}>
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-5 h-5" />
         </Button>
         <div className="relative">
           <Input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="w-auto !py-1.5" />
         </div>
         <Button variant="outline" size="sm" onClick={() => setSelectedDate(format(addDays(parseISO(selectedDate), 1), 'yyyy-MM-dd'))}>
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-5 h-5" />
         </Button>
         <Button variant="secondary" size="sm" onClick={() => setSelectedDate(format(new Date(), 'yyyy-MM-dd'))}>Hoje</Button>
       </div>
@@ -95,13 +95,13 @@ export default function Agenda() {
               icon={<CalendarDays className="w-7 h-7" />}
               title="Nenhum agendamento"
               description="Não há agendamentos para esta data"
-              action={<Button size="sm" icon={<Plus className="w-4 h-4" />} onClick={() => { resetForm(); setShowModal(true); }}>Agendar</Button>}
+              action={<Button size="sm" icon={<Plus className="w-5 h-5" />} onClick={() => { resetForm(); setShowModal(true); }}>Agendar</Button>}
             />
           ) : (
             <div className="divide-y divide-slate-50">
               {sortedAppointments.map((apt: any) => (
-                <div key={apt.id} className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
-                  <div className="flex items-center gap-4">
+                <div key={apt.id} className="px-7 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
+                  <div className="flex items-center gap-6">
                     <div className="w-14 h-14 bg-slate-900/5 rounded-2xl flex flex-col items-center justify-center">
                       <span className="text-base font-bold text-slate-800">{formatTime(apt.time)}</span>
                     </div>
@@ -111,17 +111,17 @@ export default function Agenda() {
                       <p className="text-sm font-semibold text-[#c8a45a] mt-0.5">{formatCurrency(apt.totalPrice || '0')}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <Badge variant={apt.status === 'completed' ? 'success' : apt.status === 'cancelled' ? 'error' : apt.status === 'confirmed' ? 'success' : 'info'} dot>
                       {getStatusLabel(apt.status)}
                     </Badge>
                     {apt.status !== 'completed' && apt.status !== 'cancelled' && (
                       <>
                         <Button variant="ghost" size="xs" onClick={() => updateMutation.mutate({ id: apt.id, data: { status: 'completed' } })}>
-                          <Check className="w-4 h-4 text-emerald-600" />
+                          <Check className="w-5 h-5 text-emerald-600" />
                         </Button>
                         <Button variant="ghost" size="xs" onClick={() => { if (confirm('Cancelar agendamento?')) updateMutation.mutate({ id: apt.id, data: { status: 'cancelled' } }); }}>
-                          <Trash2 className="w-4 h-4 text-red-400" />
+                          <Trash2 className="w-5 h-5 text-red-400" />
                         </Button>
                       </>
                     )}
@@ -135,7 +135,7 @@ export default function Agenda() {
 
       {/* New Appointment Modal */}
       <Modal open={showModal} onClose={() => setShowModal(false)} title="Novo Agendamento" subtitle="Preencha os dados do agendamento">
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <Select label="Cliente" value={form.clientId} onChange={(e) => setForm({ ...form, clientId: e.target.value })}
             options={[{ value: '', label: 'Selecione o cliente...' }, ...clients.map((c: any) => ({ value: String(c.id), label: c.name }))]} />
           <Select label="Barbeiro" value={form.barberId} onChange={(e) => setForm({ ...form, barberId: e.target.value })}
@@ -157,7 +157,7 @@ export default function Agenda() {
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <Input label="Data" type="date" value={form.date || selectedDate} onChange={(e) => setForm({ ...form, date: e.target.value })} />
             <Input label="Horário" type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} />
           </div>
