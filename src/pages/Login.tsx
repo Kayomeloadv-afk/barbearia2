@@ -2,8 +2,10 @@ import { useState, useRef, useEffect } from 'react';
 import { Scissors, Lock, AlertCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 
+const PIN_LENGTH = 4;
+
 export default function Login() {
-  const [pin, setPin] = useState(['', '', '', '', '', '']);
+  const [pin, setPin] = useState<string[]>(Array(PIN_LENGTH).fill(''));
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -20,14 +22,14 @@ export default function Login() {
     setPin(newPin);
     setError('');
 
-    if (value && index < 5) {
+    if (value && index < PIN_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
     }
 
     // Auto-submit when all digits filled
-    if (value && index === 5) {
+    if (value && index === PIN_LENGTH - 1) {
       const fullPin = newPin.join('');
-      if (fullPin.length === 6) {
+      if (fullPin.length === PIN_LENGTH) {
         handleSubmit(fullPin);
       }
     }
@@ -37,29 +39,32 @@ export default function Login() {
     if (e.key === 'Backspace' && !pin[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, PIN_LENGTH);
     if (pasted.length > 0) {
-      const newPin = [...pin];
-      for (let i = 0; i < pasted.length && i < 6; i++) {
+      const newPin = Array(PIN_LENGTH).fill('');
+      for (let i = 0; i < pasted.length && i < PIN_LENGTH; i++) {
         newPin[i] = pasted[i];
       }
       setPin(newPin);
-      if (pasted.length === 6) {
+      if (pasted.length === PIN_LENGTH) {
         handleSubmit(pasted);
       } else {
-        inputRefs.current[Math.min(pasted.length, 5)]?.focus();
+        inputRefs.current[Math.min(pasted.length, PIN_LENGTH - 1)]?.focus();
       }
     }
   };
 
   const handleSubmit = async (pinStr?: string) => {
     const fullPin = pinStr || pin.join('');
-    if (fullPin.length !== 6) {
-      setError('Digite o PIN completo de 6 dígitos');
+    if (fullPin.length !== PIN_LENGTH) {
+      setError(`Digite o PIN completo de ${PIN_LENGTH} dígitos`);
       return;
     }
     setLoading(true);
@@ -67,7 +72,7 @@ export default function Login() {
     setLoading(false);
     if (!result.success) {
       setError(result.error || 'PIN inválido');
-      setPin(['', '', '', '', '', '']);
+      setPin(Array(PIN_LENGTH).fill(''));
       inputRefs.current[0]?.focus();
     }
   };
@@ -81,7 +86,7 @@ export default function Login() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#c8a45a]/[0.03] rounded-full blur-3xl" />
       </div>
 
-      <div className="relative w-full max-w-sm animate-fadeIn">
+      <div className="relative w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#c8a45a] to-[#a88a3e] rounded-2xl shadow-2xl shadow-[#c8a45a]/30 mb-6">
@@ -99,7 +104,7 @@ export default function Login() {
           </div>
 
           {/* PIN Input */}
-          <div className="flex gap-2.5 justify-center mb-6" onPaste={handlePaste}>
+          <div className="flex gap-3 justify-center mb-6" onPaste={handlePaste}>
             {pin.map((digit, index) => (
               <input
                 key={index}
@@ -110,7 +115,7 @@ export default function Login() {
                 value={digit}
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-12 h-14 bg-white/[0.08] border-2 border-white/[0.1] rounded-xl text-center text-xl font-bold text-white
+                className="w-14 h-16 bg-white/[0.08] border-2 border-white/[0.1] rounded-xl text-center text-2xl font-bold text-white
                   focus:outline-none focus:border-[#c8a45a] focus:bg-white/[0.12] focus:shadow-lg focus:shadow-[#c8a45a]/10
                   transition-all duration-200 placeholder:text-slate-600"
                 placeholder="·"
@@ -121,7 +126,7 @@ export default function Login() {
 
           {/* Error */}
           {error && (
-            <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-xl mb-4 animate-fadeIn">
+            <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-xl mb-4">
               <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
               <p className="text-sm text-red-300">{error}</p>
             </div>
@@ -150,7 +155,7 @@ export default function Login() {
 
         {/* Footer */}
         <p className="text-center text-slate-600 text-xs mt-8">
-          Solicite seu PIN ao administrador do sistema
+          PIN padrão do administrador: <span className="text-slate-400 font-mono">1234</span>
         </p>
       </div>
     </div>
