@@ -1124,7 +1124,8 @@ const API_CONFIG = {
   CADASTRAR_BARBEIRO: 'https://tyrannisingly-mesorrhine-anaya.ngrok-free.dev/webhook/barbeiro',   // POST: cadastra novo barbeiro
   LANCAR_DESPESA:     'https://tyrannisingly-mesorrhine-anaya.ngrok-free.dev/webhook/despesa',   // POST: lança despesa financeira
   BUSCAR_DADOS:       'https://tyrannisingly-mesorrhine-anaya.ngrok-free.dev/webhook/dados',   // POST/GET: retorna dados do dashboard
-  CHECK_ATENDIMENTO:  'https://tyrannisingly-mesorrhine-anaya.ngrok-free.dev/webhook/atendimento',   // POST: finaliza atendimento (baixa financeira)
+  CHECK_ATENDIMENTO:  'https://tyrannisingly-mesorrhine-anaya.ngrok-free.dev/webhook/atendimento',
+  AGENDA_EVENTOS:       'https://tyrannisingly-mesorrhine-anaya.ngrok-free.dev/webhook/agenda-event',   // POST: finaliza atendimento (baixa financeira)
 };
 
 /* =============================================
@@ -1357,7 +1358,8 @@ async function cadastrarBarbeiro(event) {
     // Adiciona ao estado local
     STATE.barbeiros.push(payload);
     renderBarbeiros();
-    atualizarSelectsBarbeiros();
+    // Recarrega do n8n para sincronizar
+    setTimeout(() => carregarRenderBarbeirosN8n(), 1000);
 
     toast(`${payload.nome} cadastrado com sucesso!`, 'success');
     event.target.reset();
@@ -1370,7 +1372,7 @@ async function cadastrarBarbeiro(event) {
   }
 }
 
-/** Renderiza a lista de barbeiros */
+/** Renderiza a lista de barbeiros a partir do STATE */
 function renderBarbeiros() {
   const container = document.getElementById('barbeiros-list');
 
@@ -1382,18 +1384,68 @@ function renderBarbeiros() {
     return;
   }
 
-  container.innerHTML = STATE.barbeiros.map(b => `
+  container.innerHTML = STATE.barbeiros.map(b => {
+    // Tenta diferentes nomes de campos que podem vir do n8n
+    const nome = b.nome || b.name || b.barbeiro_nome || 'Sem nome';
+    const especialidade = b.especialidade || b.specialty || b.servico || b.profissao || 'Barbeiro';
+    const gradeHoraria = b.grade_horaria || b.grade || b.horarios || b.turno || 'Grade não definida';
+    const comissao = b.comissao_pct || b.comisao || b.commission || b.porcentagem || '0';
+
+    return `
     <div class="barber-card" style="margin-bottom: 12px;">
-      <div class="barber-avatar">${b.nome.charAt(0).toUpperCase()}</div>
+      <div class="barber-avatar">${nome.charAt(0).toUpperCase()}</div>
       <div class="barber-info">
-        <h4>${b.nome}</h4>
-        <p>${b.especialidade || 'Barbeiro'} · ${b.grade_horaria}</p>
+        <h4>${nome}</h4>
+        <p>${especialidade} · ${gradeHoraria}</p>
       </div>
       <div class="barber-commission">
-        ${b.comissao_pct}<span>%</span>
+        ${comissao}<span>%</span>
       </div>
     </div>
-  `).join('');
+  `}).join('');
+}
+
+/** Carrega e renderiza todos os barbeiros da tabela n8n em uma única função */
+async function carregarRenderBarbeirosN8n() {
+  const webhookUrl = 'https://tyrannisingly-mesorrhine-anaya.ngrok-free.dev/webhook/barbeirosCadastrados';
+
+  try {
+    const resposta = await fetch(webhookUrl, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!resposta.ok) {
+      throw new Error(`Erro HTTP: ${resposta.status}`);
+    }
+
+    const dados = await resposta.json();
+    
+    // Debug: mostra a estrutura dos dados recebidos
+    console.log('Dados recebidos do webhook barbeiros:', dados);
+    console.log('Primeiro barbeiro:', dados[0] || dados.rows?.[0]);
+    
+    // Garante que os dados são um array
+    STATE.barbeiros = Array.isArray(dados) ? dados : (dados.rows || []);
+
+    // Renderiza todos os barbeiros encontrados
+    renderBarbeiros();
+    atualizarSelectsBarbeiros();
+
+    console.log(`✓ ${STATE.barbeiros.length} barbeiro(s) carregado(s) com sucesso!`);
+
+  } catch (erro) {
+    console.error('Falha ao buscar barbeiros do n8n:', erro);
+    const container = document.getElementById('barbeiros-list');
+    container.innerHTML = `
+      <div style="text-align:center; color: #ff6b6b; padding: 40px; border: var(--border); border-radius: var(--radius); background: var(--black-2);">
+        ⚠ Erro ao carregar a lista de barbeiros.<br>
+        <small>${erro.message}</small>
+      </div>`;
+  }
 }
 
 /** Atualiza todos os selects de barbeiros no sistema */
@@ -1408,8 +1460,10 @@ function atualizarSelectsBarbeiros() {
     el.appendChild(primeira);
     STATE.barbeiros.forEach(b => {
       const opt = document.createElement('option');
-      opt.value = b.id;
-      opt.textContent = b.nome;
+      // Tenta diferentes nomes de campos para o ID
+      opt.value = b.id || b.barbeiro_id || b.barbeiroId || b._id || `barb_${STATE.barbeiros.indexOf(b)}`;
+      // Tenta diferentes nomes de campos para o nome
+      opt.textContent = b.nome || b.name || b.barbeiro_nome || 'Sem nome';
       el.appendChild(opt);
     });
   });
@@ -1530,22 +1584,29 @@ function mudarMes(delta) {
 // Função para buscar e formatar os dados do n8n
 async function carregarAgendamentosDoMes() {
   try {
-    // 1. Substitua pela URL real do seu webhook do n8n
-    const WEBHOOK_URL = 'https://tyrannisingly-mesorrhine-anaya.ngrok-free.dev/webhook/agenda-event'; 
-    
-    // 2. Faz a requisição para o n8n
+    const WEBHOOK_URL = API_CONFIG.AGENDA_EVENTOS;
+    const payload = { tipo: 'agenda_mensal' };
+
     const resposta = await fetch(WEBHOOK_URL, {
-  method: 'POST',
-  mode: 'cors', // Força o modo CORS
- headers: {
-    'Content-Type': 'application/json'
-  },
-  // O corpo pode ir vazio se você não estiver enviando filtros
-  body: JSON.stringify({ busca: 'mensal' })
-});
-    
-    if (!resposta.ok) throw new Error('Erro ao buscar dados do n8n');
-    
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!resposta.ok) {
+      const textoErro = await resposta.text().catch(() => 'Não foi possível ler a resposta do servidor');
+      console.error('Erro na resposta do webhook:', {
+        status: resposta.status,
+        statusText: resposta.statusText,
+        headers: Object.fromEntries(resposta.headers.entries()),
+        body: textoErro
+      });
+      throw new Error(`Erro ${resposta.status}: ${resposta.statusText}. Detalhes: ${textoErro}`);
+    }
+
     let eventosGoogle = await resposta.json();
     if (!Array.isArray(eventosGoogle)) {
       if (Array.isArray(eventosGoogle.events)) {
@@ -1605,11 +1666,60 @@ async function carregarAgendamentosDoMes() {
 
   } catch (erro) {
     console.error("Falha ao carregar agendamentos:", erro);
-    document.getElementById('dia-agendamentos').innerHTML = `
-      <div style="text-align:center; color: var(--warning); padding: 40px;">
-        Erro ao carregar os agendamentos. Verifique a conexão com o servidor.
-      </div>
-    `;
+
+    // Fallback: carrega dados mock para manter a aplicação funcional
+    console.warn("Usando dados mock devido ao erro no webhook");
+    carregarAgendamentosMock();
+
+    // Mostra aviso ao usuário
+    toast('Erro no servidor. Usando dados locais.', 'warning');
+  }
+}
+
+/** Carrega agendamentos mock quando o webhook falha */
+function carregarAgendamentosMock() {
+  const hoje = new Date();
+  const amanha = new Date(hoje);
+  amanha.setDate(hoje.getDate() + 1);
+
+  // Gera alguns agendamentos de exemplo
+  STATE.agendamentos = [
+    {
+      data: hoje.toISOString().split('T')[0],
+      hora: '09:00',
+      nome_cliente: 'João Silva',
+      servico: 'Corte + Barba',
+      barbeiro_nome: 'Rafael Mendes',
+      confirmado: true,
+      status: 'pendente'
+    },
+    {
+      data: hoje.toISOString().split('T')[0],
+      hora: '14:30',
+      nome_cliente: 'Pedro Santos',
+      servico: 'Corte',
+      barbeiro_nome: 'Lucas Oliveira',
+      confirmado: false,
+      status: 'pendente'
+    },
+    {
+      data: amanha.toISOString().split('T')[0],
+      hora: '10:00',
+      nome_cliente: 'Carlos Lima',
+      servico: 'Pigmentação',
+      barbeiro_nome: 'Diego Santos',
+      confirmado: true,
+      status: 'pendente'
+    }
+  ];
+
+  // Atualiza a tela
+  renderCalendario();
+
+  // Seleciona o dia atual
+  if (STATE.agendamentos.length) {
+    const primeiraData = STATE.agendamentos[0].data;
+    selecionarDia(primeiraData);
   }
 }
 
@@ -1628,7 +1738,7 @@ async function carregarPainelBarbeiro() {
 
   try {
     // Busca agendamentos do barbeiro via webhook
-    const dados = await webhookCall(API_CONFIG.BUSCAR_DADOS, {
+    const dados = await webhookCall(API_CONFIG.AGENDA_EVENTOS, {
       tipo: 'agenda_barbeiro',
       barbeiro_id: barbeiroId,
       data: hoje,
@@ -1863,8 +1973,7 @@ function carregarMockData() {
     { descricao: 'Conta de Luz', valor: 220, tipo: 'fixa', data: hoje },
   ];
 
-  renderBarbeiros();
-  atualizarSelectsBarbeiros();
+  carregarRenderBarbeirosN8n();
   renderDespesas();
 
   // Mock stats
@@ -1874,16 +1983,20 @@ function carregarMockData() {
   document.getElementById('stat-atendimentos').textContent = '3';
   document.getElementById('stat-receita-change').textContent = '+12% vs mês anterior';
 
-  document.getElementById('performance-table').innerHTML = STATE.barbeiros.map(b => `
+  document.getElementById('performance-table').innerHTML = STATE.barbeiros.map(b => {
+    const nome = b.nome || b.name || b.barbeiro_nome || 'Sem nome';
+    const comissao = b.comissao_pct || b.comissao || b.commission || b.porcentagem || 0;
+
+    return `
     <tr>
-      <td>${b.nome}</td>
+      <td>${nome}</td>
       <td>${Math.floor(Math.random()*20+5)}</td>
       <td>${formatMoeda(Math.random()*3000+1000)}</td>
-      <td>—</td>
+      <td>${comissao}%</td>
       <td>${formatMoeda(Math.random()*1800+600)}</td>
       <td><span class="badge badge-success">ativo</span></td>
     </tr>
-  `).join('');
+  `}).join('');
 }
 
 /* =============================================
@@ -1916,6 +2029,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 document.addEventListener('DOMContentLoaded', () => {
   // Carrega os eventos do n8n logo que a página abrir
+  carregarRenderBarbeirosN8n();
   carregarAgendamentosDoMes();
 });
 </script>
